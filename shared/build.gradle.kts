@@ -4,7 +4,10 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
+
 }
+
+apply(from = "${project.rootDir}/ktlint.gradle.kts")
 
 kotlin {
     android()

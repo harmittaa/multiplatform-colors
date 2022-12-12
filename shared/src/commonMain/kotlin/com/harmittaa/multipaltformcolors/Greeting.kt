@@ -15,5 +15,4 @@ class Greeting {
         val response = client.get("https://ktor.io/docs/")
         return response.bodyAsText()
     }
-
 }

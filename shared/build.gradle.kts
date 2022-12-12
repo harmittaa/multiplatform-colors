@@ -43,6 +43,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.core)
                 implementation(libs.coroutines.core)
+                implementation(libs.koin.core)
             }
         }
         val commonTest by getting {

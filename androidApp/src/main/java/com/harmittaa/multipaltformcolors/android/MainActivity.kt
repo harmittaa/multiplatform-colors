@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.harmittaa.multipaltformcolors.Greeting
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 @Composable
 fun MyApplicationTheme(
@@ -65,6 +66,7 @@ fun MyApplicationTheme(
 }
 
 class MainActivity : ComponentActivity() {
+    val greeting: Greeting by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -78,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(true) {
                         scope.launch {
                             text = try {
-                                Greeting().getGreeting()
+                                greeting.getGreeting()
                             } catch (e: Exception) {
                                 e.localizedMessage ?: "error"
                             }

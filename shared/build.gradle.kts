@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode.BITCODE
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -6,22 +8,34 @@ plugins {
 
 kotlin {
     android()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    )
 
     cocoapods {
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
         version = "1.0"
-        ios.deploymentTarget = "14.1"
+        ios.deploymentTarget = "15.0"
         podfile = project.file("../iosApp/Podfile")
         framework {
+            transitiveExport = true
+            isStatic = false
+            embedBitcode(BITCODE)
             baseName = "shared"
         }
     }
     
     sourceSets {
+        all {
+            languageSettings.apply {
+                optIn("kotlin.RequiresOptIn")
+                optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+            }
+        }
         val commonMain by getting
         val commonTest by getting {
             dependencies {
@@ -48,6 +62,12 @@ kotlin {
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
         }
+
+        remove(sourceSets["androidAndroidTestRelease"])
+        remove(sourceSets["androidTestFixtures"])
+        remove(sourceSets["androidTestFixturesDebug"])
+        remove(sourceSets["androidTestFixturesRelease"])
+
     }
 }
 

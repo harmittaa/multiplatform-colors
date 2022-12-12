@@ -35,5 +35,3 @@ fastlane/test_output
 
 #
 *.xcodeproj/
-
-GubbeiOSClient/Resources/Generated/

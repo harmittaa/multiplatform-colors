@@ -3,8 +3,12 @@ package com.harmittaa.multipaltformcolors.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -22,14 +26,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.harmittaa.multipaltformcolors.Greeting
+import com.harmittaa.multipaltformcolors.repository.ColorRepository
+import com.harmittaa.multipaltformcolors.repository.ModelWithData
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 @Composable
 fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colors = if (darkTheme) {
         darkColors(
@@ -66,7 +71,7 @@ fun MyApplicationTheme(
 }
 
 class MainActivity : ComponentActivity() {
-    val greeting: Greeting by inject()
+    val colorRepository: ColorRepository by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -77,16 +82,53 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val scope = rememberCoroutineScope()
                     var text by remember { mutableStateOf("Loading") }
+                    var buttons by remember { mutableStateOf(emptyList<String>()) }
+                    var colors by remember { mutableStateOf(emptyList<List<Int>>()) }
+
                     LaunchedEffect(true) {
                         scope.launch {
-                            text = try {
-                                greeting.getGreeting()
+                            try {
+                                val result = colorRepository.getColorModels()
+                                text = result.toString()
+                                colors = result.first { it.colors.isNotEmpty() }.colors
+                                buttons = result.map { it.name }
                             } catch (e: Exception) {
-                                e.localizedMessage ?: "error"
+                                text = e.localizedMessage ?: "error"
                             }
                         }
                     }
-                    Greeting(text)
+
+                    var selectedOne by remember { mutableStateOf<String?>(null) }
+                    LaunchedEffect(key1 = selectedOne) {
+                        if (selectedOne == null) return@LaunchedEffect
+                        scope.launch {
+                            val result = colorRepository.getAColor(selectedOne!!)
+                            colors = result
+                        }
+                    }
+
+                    Column {
+                        Greeting(text)
+                        buttons.forEach {
+                            Button(onClick = { selectedOne = it }) {
+                                Text(text = it)
+                            }
+                        }
+
+                        colors.forEach {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        Color(
+                                            red = it[0],
+                                            green = it[1],
+                                            blue = it[2]
+                                        )
+                                    )
+                                    .size(20.dp)
+                            )
+                        }
+                    }
                 }
             }
         }

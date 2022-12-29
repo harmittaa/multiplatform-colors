@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-
+    kotlin("plugin.serialization") version "1.7.20"
 }
 
 apply(from = "${project.rootDir}/ktlint.gradle.kts")
@@ -41,9 +41,12 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
+                implementation(libs.bundles.ktor)
                 implementation(libs.ktor.core)
                 implementation(libs.coroutines.core)
                 implementation(libs.koin.core)
+                implementation(libs.kotlinx.serialization)
+                implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
             }
         }
         val commonTest by getting {

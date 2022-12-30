@@ -43,7 +43,7 @@ jobs:
           cd iosApp/
           pod install --repo-update
 
-      - Build Xcode project
+      - name: Build Xcode project
         run: |
           xcodebuild \
           -workspace iosApp/iosApp.xcworkspace \

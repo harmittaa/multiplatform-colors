@@ -7,6 +7,6 @@ class CommonGreetingTest {
 
     @Test
     fun testExample() {
-        assertTrue(true)
+        assertTrue(false)
     }
 }

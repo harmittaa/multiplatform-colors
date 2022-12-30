@@ -51,7 +51,6 @@ jobs:
           -scheme iosApp \
           -sdk iphonesimulator15.5 \
           -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.5' \
-          test
 
       - name: Run shared X64 iOS tests
         run: ./gradlew shared:iosX64Test

@@ -1,0 +1,38 @@
+name: Android CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+      paths-ignore:
+        - 'iosApp/**'
+
+jobs:
+  android-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Run assembleDebug
+        run: ./gradlew androidApp:assembleDebug
+
+      - name: Run ktlint for shared
+        run: ./gradlew shared:ktlintCheck
+
+      - name: Run ktlint for androidApp
+        run: ./gradlew androidApp:ktlintCheck
+
+      - name: Run shared unit tests
+        run: ./gradlew shared:testDebugUnitTest
+
+      - name: Run androidApp unit tests
+        run: ./gradlew androidApp:testDebugUnitTest

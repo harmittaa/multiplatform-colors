@@ -3,6 +3,8 @@ plugins {
     kotlin("android")
 }
 
+apply(from = "${project.rootDir}/ktlint.gradle.kts")
+
 android {
     namespace = "com.harmittaa.multipaltformcolors.android"
     compileSdk = 33

@@ -37,7 +37,7 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '13.4.1'
+          xcode-version: '14.0.1'
 
       - name: Install Pods
         run: |
@@ -49,8 +49,9 @@ jobs:
           xcodebuild \
           -workspace iosApp/iosApp.xcworkspace \
           -scheme iosApp \
-          -sdk iphonesimulator15.5 \
-          -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.5' \
+          -sdk iphonesimulator16.0 \
+          -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.0' \
+          test
 
       - name: Run shared X64 iOS tests
         run: ./gradlew shared:iosX64Test

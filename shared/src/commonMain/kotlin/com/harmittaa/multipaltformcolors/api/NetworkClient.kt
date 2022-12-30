@@ -11,13 +11,12 @@ import kotlinx.serialization.json.Json
 internal fun getNetworkClient(): HttpClient {
     return HttpClient {
         install(ContentNegotiation) {
-            clearIgnoredTypes()
-
             val format = Json {
                 prettyPrint = true
                 encodeDefaults = true
             }
 
+            // colormind API returns JSON with text/html content type, hence this workaround
             register(ContentType.Text.Html, KotlinxSerializationConverter(format))
             json(
                 Json {

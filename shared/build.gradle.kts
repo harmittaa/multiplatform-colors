@@ -46,7 +46,7 @@ kotlin {
                 implementation(libs.coroutines.core)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.serialization)
-                implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
+                // implementation(libs.kotlin.reflect)
             }
         }
         val commonTest by getting {

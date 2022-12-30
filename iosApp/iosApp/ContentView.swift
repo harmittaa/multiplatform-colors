@@ -1,8 +1,10 @@
 import SwiftUI
 import shared
+import Combine
+import KMPNativeCoroutinesCombine
 
 struct ContentView: View {
-    @ObservedObject private(set) var viewModel: ViewModel
+    @ObservedObject private(set) var viewModel: KmpNativeCoroutinesTest
 
     var body: some View {
         Text(viewModel.text)
@@ -23,5 +25,26 @@ extension ContentView {
                 }
             }
         }
+    }
+}
+
+class KmpNativeCoroutinesTest: ObservableObject {
+    let helper: GreetingHelper = GreetingHelper()
+    @Published private(set) var text: String = "Loading models"
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        let future = createFuture(for: helper.getColorModelsNative())
+        createFuture(for: helper.getColorModelsNative())
+            // Update the UI on the main thread
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.text = error.localizedDescription
+                }
+            } receiveValue: { [weak self] word in
+                self?.text = word.description
+            }.store(in: &cancellables)
+
     }
 }

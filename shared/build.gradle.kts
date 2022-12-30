@@ -5,6 +5,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     kotlin("plugin.serialization") version "1.7.20"
+    id("com.rickclephas.kmp.nativecoroutines") version "0.13.1"
 }
 
 apply(from = "${project.rootDir}/ktlint.gradle.kts")

@@ -8,7 +8,7 @@ on:
   pull_request:
       paths-ignore:
         - 'androidApp/**'
-        - '.github/workflows/android**'
+        # - '.github/workflows/android**'
 
 jobs:
   android-ci:

@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'corretto'
+          distribution: 'temurin'
 
       - name: Run assembleDebug
         run: ./gradlew androidApp:assembleDebug

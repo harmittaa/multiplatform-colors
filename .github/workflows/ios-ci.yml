@@ -11,7 +11,7 @@ on:
         - '.github/workflows/android**'
 
 jobs:
-  android-ci:
+  ios-ci:
     runs-on: macos-12
 
     steps:
@@ -23,7 +23,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - uses: ruby/setup-ruby@v1
+      - name: Set up ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.6.6'
 
@@ -34,7 +35,7 @@ jobs:
         run: ./gradlew shared:podGenIOS --info
 
       - name: Set up Xcode
-      - uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '13.4.1'
 
@@ -43,14 +44,14 @@ jobs:
           cd iosApp/
           pod install --repo-update
 
-      #- name: Build Xcode project
-      #  run: |
-      #    xcodebuild \
-      #    -workspace iosApp/iosApp.xcworkspace \
-      #    -scheme iosApp \
-       #   -sdk iphonesimulator \
-       #   -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.5' \
-       #   test
+      - name: Build Xcode project
+        run: |
+          xcodebuild \
+          -workspace iosApp/iosApp.xcworkspace \
+          -scheme iosApp \
+          -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.5' \
+          test
 
       - name: Run shared X64 iOS tests
         run: ./gradlew shared:iosX64Test

@@ -3,6 +3,8 @@ plugins {
     kotlin("android")
 }
 
+apply(from = "${project.rootDir}/ktlint.gradle.kts")
+
 android {
     namespace = "com.harmittaa.multipaltformcolors.android"
     compileSdk = 33
@@ -39,4 +41,6 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(libs.bundles.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }

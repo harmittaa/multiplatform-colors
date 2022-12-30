@@ -3,17 +3,28 @@ package com.harmittaa.multipaltformcolors.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.Typography
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -22,8 +33,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.harmittaa.multipaltformcolors.Greeting
+import com.harmittaa.multipaltformcolors.repository.ColorRepository
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 @Composable
 fun MyApplicationTheme(
@@ -65,6 +77,7 @@ fun MyApplicationTheme(
 }
 
 class MainActivity : ComponentActivity() {
+    val colorRepository: ColorRepository by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -75,16 +88,53 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val scope = rememberCoroutineScope()
                     var text by remember { mutableStateOf("Loading") }
+                    var buttons by remember { mutableStateOf(emptyList<String>()) }
+                    var colors by remember { mutableStateOf(emptyList<List<Int>>()) }
+
                     LaunchedEffect(true) {
                         scope.launch {
-                            text = try {
-                                Greeting().getGreeting()
+                            try {
+                                val result = colorRepository.getColorModels()
+                                text = result.toString()
+                                colors = result.first { it.colors.isNotEmpty() }.colors
+                                buttons = result.map { it.name }
                             } catch (e: Exception) {
-                                e.localizedMessage ?: "error"
+                                text = e.localizedMessage ?: "error"
                             }
                         }
                     }
-                    Greeting(text)
+
+                    var selectedOne by remember { mutableStateOf<String?>(null) }
+                    LaunchedEffect(key1 = selectedOne) {
+                        if (selectedOne == null) return@LaunchedEffect
+                        scope.launch {
+                            val result = colorRepository.getAColor(selectedOne!!)
+                            colors = result
+                        }
+                    }
+
+                    Column {
+                        Greeting(text)
+                        buttons.forEach {
+                            Button(onClick = { selectedOne = it }) {
+                                Text(text = it)
+                            }
+                        }
+
+                        colors.forEach {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        Color(
+                                            red = it[0],
+                                            green = it[1],
+                                            blue = it[2]
+                                        )
+                                    )
+                                    .size(20.dp)
+                            )
+                        }
+                    }
                 }
             }
         }

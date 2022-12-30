@@ -8,7 +8,7 @@ on:
   pull_request:
       paths-ignore:
         - 'androidApp/**'
-        # - '.github/workflows/android**'
+        - '.github/workflows/android**'
 
 jobs:
   android-ci:
@@ -43,14 +43,14 @@ jobs:
           cd iosApp/
           pod install --repo-update
 
-      - name: Build Xcode project
-        run: |
-          xcodebuild \
-          -workspace iosApp/iosApp.xcworkspace \
-          -scheme iosApp \
-          -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.5' \
-          test
+      #- name: Build Xcode project
+      #  run: |
+      #    xcodebuild \
+      #    -workspace iosApp/iosApp.xcworkspace \
+      #    -scheme iosApp \
+       #   -sdk iphonesimulator \
+       #   -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.5' \
+       #   test
 
       - name: Run shared X64 iOS tests
         run: ./gradlew shared:iosX64Test

@@ -5,12 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
 import androidx.compose.material.Surface
@@ -113,7 +109,13 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    Column {
+                    ColorScreen(
+                        currentTemplate = selectedOne ?: "",
+                        templates = buttons,
+                        colors = colors,
+                        onTemplateClicked = { selectedOne = it }
+                    )
+                    /* Column {
                         Greeting(text)
                         buttons.forEach {
                             Button(onClick = { selectedOne = it }) {
@@ -134,7 +136,7 @@ class MainActivity : ComponentActivity() {
                                     .size(20.dp)
                             )
                         }
-                    }
+                    } */
                 }
             }
         }

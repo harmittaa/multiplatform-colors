@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(libs.bundles.compose)
     implementation(libs.koin.core)
-    implementation(libs.koin.android)
+    // implementation(libs.koin.android)
+    implementation(libs.androidx.lifecycle.viewmodel)
     testImplementation(libs.junit.android)
 }

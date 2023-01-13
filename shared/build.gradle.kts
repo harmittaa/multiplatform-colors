@@ -56,6 +56,9 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.ktor.okhttp)
+                implementation(libs.androidx.lifecycle.viewmodel)
+                api(libs.koin.compose)
+                api(libs.koin.android)
             }
         }
         val androidTest by getting
@@ -69,6 +72,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.ktor.darwin)
+                implementation(libs.androidx.lifecycle.viewmodel)
             }
         }
         val iosX64Test by getting

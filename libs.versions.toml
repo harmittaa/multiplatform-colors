@@ -8,6 +8,8 @@ coroutines = "1.6.4"
 koin = "3.2.0"
 kotlinx = "1.4.1"
 junit = "4.13.2"
+lifecycle = "2.5.1"
+
 
 [libraries]
 # Define the libraries
@@ -31,8 +33,11 @@ coroutines_android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 koin_core = { module = "io.insert-koin:koin-core", version.ref = "koin"}
 koin_test = { module = "io.insert-koin:koin-test", version.ref = "koin"}
 koin_android = { module = "io.insert-koin:koin-android", version.ref = "koin"}
+koin_compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin"}
 
 kotlinx_serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx"}
+
+androidx_lifecycle_viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle"}
 
 junit_android = { module = "junit:junit", version.ref = "junit" }
 

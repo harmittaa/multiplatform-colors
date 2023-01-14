@@ -94,7 +94,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.harmittaa.multipaltformcolors"
+    namespace = "com.harmittaa.multiplatformcolors"
     compileSdk = 33
     defaultConfig {
         minSdk = 24

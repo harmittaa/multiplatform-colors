@@ -6,10 +6,10 @@ plugins {
 apply(from = "${project.rootDir}/ktlint.gradle.kts")
 
 android {
-    namespace = "com.harmittaa.multipaltformcolors.android"
+    namespace = "com.harmittaa.multiplatformcolors.android"
     compileSdk = 33
     defaultConfig {
-        applicationId = "com.harmittaa.multipaltformcolors.android"
+        applicationId = "com.harmittaa.multiplatformcolors.android"
         minSdk = 24
         targetSdk = 33
         versionCode = 1

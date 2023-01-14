@@ -81,61 +81,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val scope = rememberCoroutineScope()
-                    var text by remember { mutableStateOf("Loading") }
-                    var buttons by remember { mutableStateOf(emptyList<String>()) }
-                    var colors by remember { mutableStateOf(emptyList<List<Int>>()) }
-
-                    LaunchedEffect(true) {
-                        scope.launch {
-                            try {
-                                val result = colorRepository.getColorModels()
-                                text = result.toString()
-                                colors = result.first { it.colors.isNotEmpty() }.colors
-                                buttons = result.map { it.name }
-                            } catch (e: Exception) {
-                                text = e.localizedMessage ?: "error"
-                            }
-                        }
-                    }
-
-                    var selectedOne by remember { mutableStateOf<String?>(null) }
-                    LaunchedEffect(key1 = selectedOne) {
-                        if (selectedOne == null) return@LaunchedEffect
-                        scope.launch {
-                            val result = colorRepository.getAColor(selectedOne!!)
-                            colors = result
-                        }
-                    }
-
-                    ColorScreen(
-                        /* currentTemplate = selectedOne ?: "",
-                        templates = buttons,
-                        colors = colors,
-                        onTemplateClicked = { selectedOne = it } */
-                    )
-                    /* Column {
-                        Greeting(text)
-                        buttons.forEach {
-                            Button(onClick = { selectedOne = it }) {
-                                Text(text = it)
-                            }
-                        }
-
-                        colors.forEach {
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        Color(
-                                            red = it[0],
-                                            green = it[1],
-                                            blue = it[2]
-                                        )
-                                    )
-                                    .size(20.dp)
-                            )
-                        }
-                    } */
+                    ColorScreen()
                 }
             }
         }

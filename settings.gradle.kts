@@ -20,6 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MultipaltformColors"
+rootProject.name = "MultiplatformColors"
 include(":androidApp")
 include(":shared")

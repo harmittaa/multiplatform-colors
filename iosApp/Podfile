@@ -3,4 +3,5 @@ target 'iosApp' do
   platform :ios, '15.0'
   pod 'shared', :path => '../shared'
   pod 'SwiftLint', '~> 0.50.3'
+  pod 'KMPNativeCoroutinesCombine', '~> 0.13.1'
 end

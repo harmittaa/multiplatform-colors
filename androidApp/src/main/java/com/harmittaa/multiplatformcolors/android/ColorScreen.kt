@@ -11,11 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,39 +20,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.harmittaa.multiplatformcolors.viewmodel.ColorScreenViewModel
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ColorScreen(
     viewModel: ColorScreenViewModel = getViewModel()
 ) {
-    val scope = rememberCoroutineScope()
-    var text by remember { mutableStateOf("Loading") }
-    var templates by remember { mutableStateOf(emptyList<String>()) }
-    var colors by remember { mutableStateOf(emptyList<List<Int>>()) }
-
-    LaunchedEffect(true) {
-        scope.launch {
-            try {
-                val result = viewModel.getColorModels()
-                text = result.toString()
-                colors = result.first { it.colors.isNotEmpty() }.colors
-                templates = result.map { it.name }
-            } catch (e: Exception) {
-                text = e.localizedMessage ?: "error"
-            }
-        }
-    }
-
-    var currentTemplate by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(key1 = currentTemplate) {
-        if (currentTemplate == null) return@LaunchedEffect
-        scope.launch {
-            val result = viewModel.getAColor(currentTemplate!!)
-            colors = result
-        }
-    }
+    val viewState by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
@@ -63,9 +34,9 @@ fun ColorScreen(
             .padding(start = 12.dp)
     ) {
         Column {
-            Text("Current: $currentTemplate")
+            Text("Current: ${viewState.currentTemplate}")
 
-            colors.forEach { color ->
+            viewState.colorTemplate.forEach { color ->
                 ColorBar(
                     color = color,
                     modifier = Modifier
@@ -77,9 +48,9 @@ fun ColorScreen(
         }
 
         Column(Modifier.padding(top = 24.dp)) {
-            templates.forEach { template ->
-                Button(onClick = { currentTemplate = template }) {
-                    Text(text = template)
+            viewState.colorModelNames.forEach { name ->
+                Button(onClick = { viewModel.onTemplateSelected(name) }) {
+                    Text(text = name)
                 }
             }
         }

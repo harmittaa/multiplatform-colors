@@ -4,9 +4,8 @@ import com.harmittaa.multiplatformcolors.repository.ColorRepository
 import com.harmittaa.multiplatformcolors.repository.ModelWithData
 
 class ColorScreenViewModel(
-    private val repository: ColorRepository,
+    private val repository: ColorRepository
 ) : BaseViewModel() {
-
 
     suspend fun getColorModels(): List<ModelWithData> {
         return repository.getColorModels()

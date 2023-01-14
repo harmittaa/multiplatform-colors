@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harmittaa.multiplatformcolors.viewmodel.ColorScreenViewModel
 import kotlinx.coroutines.launch
@@ -29,13 +28,8 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ColorScreen(
-    viewModel: ColorScreenViewModel = getViewModel(),
-    /* currentTemplate : String,
-    templates: List<String>,
-    colors: List<List<Int>>,
-    onTemplateClicked: (String) -> Unit, */
+    viewModel: ColorScreenViewModel = getViewModel()
 ) {
-
     val scope = rememberCoroutineScope()
     var text by remember { mutableStateOf("Loading") }
     var templates by remember { mutableStateOf(emptyList<String>()) }
@@ -62,7 +56,6 @@ fun ColorScreen(
             colors = result
         }
     }
-
 
     Box(
         modifier = Modifier

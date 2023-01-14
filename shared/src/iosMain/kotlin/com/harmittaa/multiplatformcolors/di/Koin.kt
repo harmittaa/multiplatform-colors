@@ -16,7 +16,7 @@ class GreetingHelper : KoinComponent {
 fun initKoin() {
     startKoin {
         modules(
-            appModule(),
+            appModule()
 
         )
     }

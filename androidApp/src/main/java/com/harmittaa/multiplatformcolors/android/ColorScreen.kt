@@ -16,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +28,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ColorScreen(
-    viewModel: ColorScreenViewModel = getViewModel()
+    viewModel: ColorScreenViewModel = getViewModel(),
 ) {
     val viewState by viewModel.state.collectAsState()
 
@@ -34,7 +36,8 @@ fun ColorScreen(
         currentTemplateName = viewState.currentTemplateName ?: "",
         colorTemplate = viewState.colorTemplate,
         allTemplates = viewState.colorTemplateNames,
-        onTemplateSelected = viewModel::onTemplateSelected
+        onTemplateSelected = viewModel::onTemplateSelected,
+        onNextTemplateClicked = viewModel::onNextTemplateClicked,
     )
 }
 
@@ -43,7 +46,8 @@ internal fun ColorScreenContent(
     currentTemplateName: String,
     colorTemplate: List<List<Int>>,
     allTemplates: List<String>,
-    onTemplateSelected: (String) -> Unit
+    onTemplateSelected: (String) -> Unit,
+    onNextTemplateClicked: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -61,6 +65,12 @@ internal fun ColorScreenContent(
                         .padding(vertical = 6.dp, horizontal = 12.dp)
                 )
             }
+            
+            Button(
+                onClick = onNextTemplateClicked
+            ) {
+                Text("Next template")
+            }
         }
 
         Column(Modifier.padding(top = 24.dp)) {
@@ -76,7 +86,7 @@ internal fun ColorScreenContent(
 @Composable
 fun ColorBar(
     color: List<Int>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -85,6 +95,10 @@ fun ColorBar(
         Box(
             modifier = modifier.then(
                 Modifier
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = RoundedCornerShape(12.dp)
+                    )
                     .background(
                         color.toColor(),
                         shape = RoundedCornerShape(12.dp)
@@ -94,6 +108,7 @@ fun ColorBar(
 
         Text(
             text = "#${color.toHexString()}".uppercase(),
+            color = color.toColor(),
             modifier = Modifier
                 .vertical()
                 .rotate(-90f)
@@ -101,6 +116,7 @@ fun ColorBar(
     }
 }
 
+// from: https://stackoverflow.com/a/70058688
 fun Modifier.vertical() = layout { measurable, constraints ->
     val placeable = measurable.measure(constraints)
     layout(placeable.height, placeable.width) {
@@ -126,7 +142,8 @@ fun PreviewColorScreen() {
             currentTemplateName = "SomeColor",
             colorTemplate = colors,
             allTemplates = listOf("one", "two", "three"),
-            onTemplateSelected = {}
+            onTemplateSelected = {},
+            onNextTemplateClicked = {},
         )
     }
 }

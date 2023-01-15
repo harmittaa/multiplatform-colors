@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ColorScreen(
-    viewModel: ColorScreenViewModel = getViewModel(),
+    viewModel: ColorScreenViewModel = getViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
 
@@ -37,7 +36,7 @@ fun ColorScreen(
         colorTemplate = viewState.colorTemplate,
         allTemplates = viewState.colorTemplateNames,
         onTemplateSelected = viewModel::onTemplateSelected,
-        onNextTemplateClicked = viewModel::onNextTemplateClicked,
+        onNextTemplateClicked = viewModel::onNextTemplateClicked
     )
 }
 
@@ -47,7 +46,7 @@ internal fun ColorScreenContent(
     colorTemplate: List<List<Int>>,
     allTemplates: List<String>,
     onTemplateSelected: (String) -> Unit,
-    onNextTemplateClicked: () -> Unit,
+    onNextTemplateClicked: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -65,7 +64,7 @@ internal fun ColorScreenContent(
                         .padding(vertical = 6.dp, horizontal = 12.dp)
                 )
             }
-            
+
             Button(
                 onClick = onNextTemplateClicked
             ) {
@@ -86,7 +85,7 @@ internal fun ColorScreenContent(
 @Composable
 fun ColorBar(
     color: List<Int>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -143,7 +142,7 @@ fun PreviewColorScreen() {
             colorTemplate = colors,
             allTemplates = listOf("one", "two", "three"),
             onTemplateSelected = {},
-            onNextTemplateClicked = {},
+            onNextTemplateClicked = {}
         )
     }
 }

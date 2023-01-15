@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ColorScreenViewModel(
-    private val repository: ColorRepository,
+    private val repository: ColorRepository
 ) : BaseViewModel() {
 
     private val _state = MutableStateFlow(ColorState())
@@ -54,6 +54,6 @@ class ColorScreenViewModel(
     data class ColorState(
         val currentTemplateName: String? = null,
         val colorTemplateNames: List<String> = emptyList(),
-        val colorTemplate: List<List<Int>> = emptyList(),
+        val colorTemplate: List<List<Int>> = emptyList()
     )
 }

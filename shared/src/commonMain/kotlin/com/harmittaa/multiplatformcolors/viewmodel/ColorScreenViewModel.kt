@@ -67,6 +67,5 @@ class ColorScreenViewModel(
     data class ColorState(
         val currentTemplate: ColorTemplate = ColorTemplate(),
         val colorTemplates: List<ColorTemplate> = emptyList(),
-        val colorTemplate: List<List<Int>> = emptyList()
     )
 }

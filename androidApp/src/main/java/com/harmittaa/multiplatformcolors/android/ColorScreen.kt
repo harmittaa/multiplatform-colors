@@ -13,12 +13,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.harmittaa.multiplatformcolors.android.extensions.toColor
+import com.harmittaa.multiplatformcolors.android.extensions.toHexString
 import com.harmittaa.multiplatformcolors.viewmodel.ColorScreenViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -28,28 +30,42 @@ fun ColorScreen(
 ) {
     val viewState by viewModel.state.collectAsState()
 
+    ColorScreenContent(
+        currentTemplateName = viewState.currentTemplateName ?: "",
+        colorTemplate = viewState.colorTemplate,
+        allTemplates = viewState.colorTemplateNames,
+        onTemplateSelected = viewModel::onTemplateSelected
+    )
+}
+
+@Composable
+internal fun ColorScreenContent(
+    currentTemplateName: String,
+    colorTemplate: List<List<Int>>,
+    allTemplates: List<String>,
+    onTemplateSelected: (String) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 12.dp)
     ) {
         Column {
-            Text("Current: ${viewState.currentTemplate}")
+            Text("Current: $currentTemplateName")
 
-            viewState.colorTemplate.forEach { color ->
+            colorTemplate.forEach { color ->
                 ColorBar(
                     color = color,
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(1f)
-                        .padding(vertical = 6.dp)
+                        .padding(vertical = 6.dp, horizontal = 12.dp)
                 )
             }
         }
 
         Column(Modifier.padding(top = 24.dp)) {
-            viewState.colorModelNames.forEach { name ->
-                Button(onClick = { viewModel.onTemplateSelected(name) }) {
+            allTemplates.forEach { name ->
+                Button(onClick = { onTemplateSelected(name) }) {
                     Text(text = name)
                 }
             }
@@ -79,12 +95,22 @@ fun ColorBar(
         Text(
             text = "#${color.toHexString()}".uppercase(),
             modifier = Modifier
+                .vertical()
                 .rotate(-90f)
         )
     }
 }
 
-/*
+fun Modifier.vertical() = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints)
+    layout(placeable.height, placeable.width) {
+        placeable.place(
+            x = -(placeable.width / 2 - placeable.height / 2),
+            y = -(placeable.height / 2 - placeable.width / 2)
+        )
+    }
+}
+
 @Preview
 @Composable
 fun PreviewColorScreen() {
@@ -96,40 +122,11 @@ fun PreviewColorScreen() {
             listOf(173, 88, 75),
             listOf(150, 50, 64)
         )
-        ColorScreen(
-            currentTemplate = "SomeColor",
-            colors = colors,
-            templates = listOf("one", "two", "three"),
-            onTemplateClicked = {}
+        ColorScreenContent(
+            currentTemplateName = "SomeColor",
+            colorTemplate = colors,
+            allTemplates = listOf("one", "two", "three"),
+            onTemplateSelected = {}
         )
     }
-}
-
-@Preview
-@Composable
-fun PreviewColorBar() {
-    MyApplicationTheme {
-        val colors = listOf(
-            listOf(14, 110, 121),
-            listOf(243, 207, 145),
-            listOf(215, 192, 82),
-            listOf(173, 88, 75),
-            listOf(150, 50, 64)
-        )
-        ColorBar(
-            colors.first()
-        )
-    }
-}
- */
-fun List<Int>.toColor(): Color {
-    return Color(
-        red = this[0],
-        green = this[1],
-        blue = this[2]
-    )
-}
-
-fun List<Int>.toHexString(): String {
-    return Integer.toHexString(android.graphics.Color.rgb(this[0], this[1], this[2]))
 }

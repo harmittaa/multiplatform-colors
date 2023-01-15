@@ -28,7 +28,7 @@ class ColorScreenViewModel(
     fun onTemplateSelected(template: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(
-                currentTemplate = template,
+                currentTemplateName = template,
                 colorTemplate = repository.getAColor(template)
             )
         }
@@ -37,14 +37,14 @@ class ColorScreenViewModel(
     private suspend fun getColorNames() {
         val names = repository.getColorModelNames()
         _state.value = _state.value.copy(
-            colorModelNames = names
+            colorTemplateNames = names
         )
         onTemplateSelected(names.first())
     }
 
     data class ColorState(
-        val currentTemplate: String? = null,
-        val colorModelNames: List<String> = emptyList(),
+        val currentTemplateName: String? = null,
+        val colorTemplateNames: List<String> = emptyList(),
         val colorTemplate: List<List<Int>> = emptyList()
     )
 }

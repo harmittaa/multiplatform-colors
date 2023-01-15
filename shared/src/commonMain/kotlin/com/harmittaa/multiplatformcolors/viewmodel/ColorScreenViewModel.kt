@@ -7,6 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+data class ColorTemplate(
+    val name: String = "",
+    val colors: List<List<Int>> = emptyList()
+)
+
 class ColorScreenViewModel(
     private val repository: ColorRepository
 ) : BaseViewModel() {
@@ -25,35 +30,43 @@ class ColorScreenViewModel(
         }
     }
 
-    fun onTemplateSelected(template: String) {
+    fun onTemplateSelected(template: ColorTemplate) {
         viewModelScope.launch {
+            val newTemplate = template.takeIf { it.colors.isNotEmpty() }
+                ?: template.copy(colors = repository.getAColor(template.name))
+            val idxOfTemplate =
+                _state.value.colorTemplates.indexOfFirst { it.name == newTemplate.name }
+            val templates = _state.value.colorTemplates.toMutableList()
+            templates[idxOfTemplate] = newTemplate
             _state.value = _state.value.copy(
-                currentTemplateName = template,
-                colorTemplate = repository.getAColor(template)
+                currentTemplate = newTemplate,
+                colorTemplates = templates
             )
         }
     }
 
     fun onNextTemplateClicked() {
-        val current = _state.value.colorTemplateNames.indexOf(_state.value.currentTemplateName)
-        if (current == _state.value.colorTemplateNames.size - 1) {
-            onTemplateSelected(_state.value.colorTemplateNames.first())
+        val current =
+            _state.value.colorTemplates.indexOfFirst { it.name == _state.value.currentTemplate.name }
+        if (current == _state.value.colorTemplates.size - 1) {
+            onTemplateSelected(_state.value.colorTemplates.first())
         } else {
-            onTemplateSelected(_state.value.colorTemplateNames[current + 1])
+            onTemplateSelected(_state.value.colorTemplates[current + 1])
         }
     }
 
     private suspend fun getColorNames() {
-        val names = repository.getColorModelNames()
+        val templates = repository.getColorModelNames()
+            .map { ColorTemplate(name = it) }
         _state.value = _state.value.copy(
-            colorTemplateNames = names
+            colorTemplates = templates
         )
-        onTemplateSelected(names.first())
+        onTemplateSelected(templates.first())
     }
 
     data class ColorState(
-        val currentTemplateName: String? = null,
-        val colorTemplateNames: List<String> = emptyList(),
+        val currentTemplate: ColorTemplate = ColorTemplate(),
+        val colorTemplates: List<ColorTemplate> = emptyList(),
         val colorTemplate: List<List<Int>> = emptyList()
     )
 }

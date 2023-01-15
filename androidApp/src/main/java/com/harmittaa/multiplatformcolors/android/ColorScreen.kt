@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.harmittaa.multiplatformcolors.android.extensions.toColor
 import com.harmittaa.multiplatformcolors.android.extensions.toHexString
 import com.harmittaa.multiplatformcolors.viewmodel.ColorScreenViewModel
+import com.harmittaa.multiplatformcolors.viewmodel.ColorTemplate
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -32,9 +33,8 @@ fun ColorScreen(
     val viewState by viewModel.state.collectAsState()
 
     ColorScreenContent(
-        currentTemplateName = viewState.currentTemplateName ?: "",
-        colorTemplate = viewState.colorTemplate,
-        allTemplates = viewState.colorTemplateNames,
+        currentTemplate = viewState.currentTemplate,
+        allTemplates = viewState.colorTemplates,
         onTemplateSelected = viewModel::onTemplateSelected,
         onNextTemplateClicked = viewModel::onNextTemplateClicked
     )
@@ -42,10 +42,9 @@ fun ColorScreen(
 
 @Composable
 internal fun ColorScreenContent(
-    currentTemplateName: String,
-    colorTemplate: List<List<Int>>,
-    allTemplates: List<String>,
-    onTemplateSelected: (String) -> Unit,
+    currentTemplate: ColorTemplate,
+    allTemplates: List<ColorTemplate>,
+    onTemplateSelected: (ColorTemplate) -> Unit,
     onNextTemplateClicked: () -> Unit
 ) {
     Box(
@@ -53,9 +52,9 @@ internal fun ColorScreenContent(
             .fillMaxSize()
     ) {
         Column {
-            Text("Current: $currentTemplateName")
+            Text("Current: ${currentTemplate.name}")
 
-            colorTemplate.forEach { color ->
+            currentTemplate.colors.forEach { color ->
                 ColorBar(
                     color = color,
                     modifier = Modifier
@@ -73,9 +72,9 @@ internal fun ColorScreenContent(
         }
 
         Column(Modifier.padding(top = 24.dp)) {
-            allTemplates.forEach { name ->
-                Button(onClick = { onTemplateSelected(name) }) {
-                    Text(text = name)
+            allTemplates.forEach { template ->
+                Button(onClick = { onTemplateSelected(template) }) {
+                    Text(text = template.name)
                 }
             }
         }
@@ -138,11 +137,9 @@ fun PreviewColorScreen() {
             listOf(150, 50, 64)
         )
         ColorScreenContent(
-            currentTemplateName = "SomeColor",
-            colorTemplate = colors,
-            allTemplates = listOf("one", "two", "three"),
-            onTemplateSelected = {},
-            onNextTemplateClicked = {}
-        )
+            currentTemplate = ColorTemplate(name = "one", colors = colors),
+            allTemplates = listOf(ColorTemplate("one"), ColorTemplate("one")),
+            onTemplateSelected = {}
+        ) {}
     }
 }

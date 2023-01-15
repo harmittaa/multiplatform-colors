@@ -7,11 +7,6 @@ interface ColorRepository {
     suspend fun getAColor(model: String): List<List<Int>>
 }
 
-data class ModelWithData(
-    val name: String,
-    val colors: List<List<Int>> = emptyList()
-)
-
 class ColorRepositoryImpl(
     private val api: ColorApi
 ) : ColorRepository {
